@@ -5,8 +5,6 @@ const UPDATE = "UPDATE";
 const SET_PROP = "SET_PROP";
 const REMOVE_PROP = "REMOVE PROP";
 
-//// DIFF
-
 function changed(node1, node2) {
   return (
     typeof node1 !== typeof node2 ||
@@ -40,14 +38,9 @@ function diffChildren(newNode, oldNode) {
     patches[i] = diff(newNode.children[i], oldNode.children[i]);
   }
   return patches;
-} /*
-stage 1 UPDATE return only type
-stage 2 UPDATE return add children
-stage 3 UPDATE full
-*/
+}
 
 function diff(newNode, oldNode) {
-  //@
   if (!oldNode) {
     return { type: CREATE, newNode };
   }
@@ -64,29 +57,9 @@ function diff(newNode, oldNode) {
       children: diffChildren(newNode, oldNode),
     };
   }
-} //// PATCH
-
-/*
-  Stage 1 single element:
-  if (typeof node === 'string') {
-    return document.createTextNode(node)
-  }
-  return document.createElement(node.type)
-  Stage 2 children:
-  if (typeof node === 'string') {
-    return document.createTextNode(node)
-  }
-  const el = document.createElement(node.type)
-  node.children
-    .map(createElement)
-    .forEach(el.appendChild.bind(el))
-  return el
-  Stage 3: add
-  setProps(el, node.props)
-*/
+}
 
 function createElement(node) {
-  //@
   if (typeof node === "string") {
     return document.createTextNode(node);
   }
@@ -94,14 +67,7 @@ function createElement(node) {
   setProps(el, node.props);
   node.children.map(createElement).forEach(el.appendChild.bind(el));
   return el;
-} /*
-  stage 1:
-  target.setAttribute(name, value)
-  stage 2: add
-  if (name === 'className') {
-    return target.setAttribute('class', value)
-  }
-*/
+}
 
 function setProp(target, name, value) {
   //@
@@ -117,8 +83,6 @@ function setProps(target, props) {
   });
 }
 
-// Start with the last line,
-// then className
 function removeProp(target, name, value) {
   if (name === "className") {
     return target.removeAttribute("class");
@@ -137,15 +101,7 @@ function patchProps(parent, patches) {
       removeProp(parent, name, value);
     }
   }
-} /*
-stage 1 no props or children
-stage 2 + children
-  const {children} = patches
-  for (let i = 0; i < children.length; i++) {
-    patch(el, children[i], i)
-  }
-stage 3 + props
-*/
+}
 
 function patch(parent, patches, index = 0) {
   //@
@@ -175,7 +131,7 @@ function patch(parent, patches, index = 0) {
       }
     }
   }
-} //// My Application
+}
 
 function flatten(arr) {
   return [].concat.apply([], arr);
@@ -185,14 +141,6 @@ function h(type, props, ...children) {
   props = props || {};
   return { type, props, children: flatten(children) };
 }
-
-/*
-Stage 1 JSX -> h:
-return <ul id="cool" className="foo">
-  <li className="test">text 1</li>
-  <li>text 2</li>
-</ul>
-*/
 
 function view(count) {
   //@
