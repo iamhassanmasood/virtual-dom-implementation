@@ -5,6 +5,8 @@ const UPDATE = "UPDATE";
 const SET_PROP = "SET_PROP";
 const REMOVE_PROP = "REMOVE PROP";
 
+// Check changes
+
 function changed(node1, node2) {
   return (
     typeof node1 !== typeof node2 ||
